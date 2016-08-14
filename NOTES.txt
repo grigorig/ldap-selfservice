@@ -1,0 +1,8 @@
+Web API
+=======
+
+/api/users/<userid>/ - verify account (GET)
+/api/users/<userid>/profile - get/set profile info (GET/POST)
+/api/users/<userid>/password - set password (POST)
+/api/tickets/<ticket> - recover (POST)
+/api/tickets/ - request (POST)

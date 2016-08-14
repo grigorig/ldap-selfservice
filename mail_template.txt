@@ -1,0 +1,14 @@
+Dear $user,
+
+a password reset ticket was generated for your gnumpf.tk account. Please follow
+this link to create a new password:
+
+https://a.gnumpf.tk/#/?ticket=$ticketid
+
+This ticket is valid for $ticket_timeout minutes.
+
+If you did not request this password reset or if there are any issues with the
+password reset, please reply to this mail.
+
+-- 
+gnumpf.tk auth

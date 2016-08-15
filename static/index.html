@@ -2,7 +2,7 @@
 <html data-ng-app="LoginApp">
 
 <head>
-<meta charset="utf-8" />
+<meta charset="utf-8">
 <title>gnumpf.tk auth</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="assets/w3.css">
@@ -10,11 +10,14 @@
 <script src="assets/angular/angular.min.js"></script>
 <script src="assets/angular/angular-route.min.js"></script>
 <script src="app.js"></script>
+<style type="text/css">.ng-cloak { display: none !important; }</style>
 </head>
 
 <body data-ng-controller="MasterCtrl">
 
-<div class="w3-content" style="max-width: 45em;">
+<noscript><h6 class="w3-container w3-center w3-padding">This site requires JavaScript.</h6></noscript>
+
+<div class="w3-content ng-cloak" style="max-width: 45em;">
 <div class="w3-card-8 w3-margin-top w3-margin-bottom">
 <header class="w3-container w3-teal">
   <h1><i class="fa fa-user" aria-hidden="true"></i> {{title}}</h1>
@@ -25,7 +28,7 @@
 </div>
 </div>
 
- <div class="w3-modal w3-show" data-ng-show="show_modal">
+ <div class="w3-modal w3-show ng-cloak" data-ng-show="show_modal">
   <div class="w3-modal-content">
     <header class="w3-container w3-red">
       <h2>{{modal_title}}</h2>

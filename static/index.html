@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html ng-app="LoginApp">
+<html data-ng-app="LoginApp">
 
 <head>
-<meta charset="utf8" />
+<meta charset="utf-8" />
 <title>gnumpf.tk auth</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="assets/w3.css">
@@ -12,7 +12,7 @@
 <script src="app.js"></script>
 </head>
 
-<body ng-controller="MasterCtrl">
+<body data-ng-controller="MasterCtrl">
 
 <div class="w3-content" style="max-width: 45em;">
 <div class="w3-card-8 w3-margin-top w3-margin-bottom">
@@ -20,12 +20,12 @@
   <h1><i class="fa fa-user" aria-hidden="true"></i> {{title}}</h1>
 </header>
 
-<div ng-view></div>
+<div data-ng-view></div>
 
 </div>
 </div>
 
- <div id="01" class="w3-modal w3-show" ng-show="show_modal">
+ <div class="w3-modal w3-show" data-ng-show="show_modal">
   <div class="w3-modal-content">
     <header class="w3-container w3-red">
       <h2>{{modal_title}}</h2>
@@ -33,16 +33,17 @@
     <div class="w3-container">
       <p>{{modal_msg}}</p>
       
-      <div class="w3-panel w3-sand" ng-show="modal_err_msg"><p>{{modal_err_msg}}</p></div>
+      <div class="w3-panel w3-sand" data-ng-show="modal_err_msg"><p>{{modal_err_msg}}</p></div>
       
-      <p ng-show="modal_post_msg">{{modal_post_msg}}</p>
+      <p data-ng-show="modal_post_msg">{{modal_post_msg}}</p>
     </div>
     <footer class="w3-container w3-center">
       <p>
-      <input type="button" value="Close" class="w3-btn w3-blue w3-hover-none w3-hover-red" ng-click="show_modal = false">
+      <input type="button" value="Close" class="w3-btn w3-blue w3-hover-none w3-hover-red" data-ng-click="show_modal = false">
       </p>
     </footer>
   </div>
+ </div>
 
 </body>
 </html> 

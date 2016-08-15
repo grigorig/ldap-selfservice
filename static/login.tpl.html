@@ -1,17 +1,17 @@
-<div class="w3-content w3-section" style="max-width: 20em;" ng-controller="LoginCtrl" ng-class="{'w3-disabled': busy}">
+<div class="w3-content w3-section" style="max-width: 20em;" data-ng-controller="LoginCtrl" data-ng-class="{'w3-disabled': busy}">
 <form class="w3-container">
   <p>
-  <input class="w3-input w3-border" type="text" maxlength="256" autofocus ng-model="username" id="login-username">
+  <input class="w3-input w3-border" type="text" maxlength="256" autofocus data-ng-model="username" id="login-username">
   <label class="w3-label">Username</label>
   </p>
   
   <p>
-  <input class="w3-input w3-border" type="password" maxlength="256" ng-model="password">
+  <input class="w3-input w3-border" type="password" maxlength="256" data-ng-model="password">
   <label class="w3-label">Password</label>
   </p>
   
   <p>
-  <button class="w3-btn w3-blue w3-hover-none w3-hover-red" ng-click="doLogin()">Login</button>
+  <button class="w3-btn w3-blue w3-hover-none w3-hover-red" data-ng-click="doLogin()">Login</button>
   <span class="w3-text-red w3-padding-small">{{status_message}}</span>
   </p>
 </form>
@@ -27,4 +27,3 @@
     </div>
   </div>
 </footer>
-</div>

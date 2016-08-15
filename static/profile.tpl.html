@@ -1,5 +1,5 @@
-<div ng-controller="ProfileCtrl" ng-class="{'w3-disabled': busy}">
-    <div class="w3-container">
+<div data-ng-controller="ProfileCtrl">
+<div class="w3-container" data-ng-class="{'w3-disabled': busy}">
 
   <div class="w3-section">
   <h5>Account Information</h5>
@@ -10,23 +10,23 @@
     </p>
   </div>
 
-  <form class="w3-section" ng-submit="doSaveProfile()">
+  <form class="w3-section" data-ng-submit="doSaveProfile()">
   <h5>Personal Data</h5>
   
   <div class="w3-row-padding">
     <div class="w3-half">
       <p>
-      <input class="w3-input w3-border" type="text" maxlength="256" autofocus ng-model="model.display_name" required>
+      <input class="w3-input w3-border" type="text" maxlength="256" autofocus data-ng-model="model.display_name" required>
       <label class="w3-label w3-validate">Display Name</label>
       </p>
       <p>
-      <input class="w3-input w3-border" type="text" maxlength="256" ng-model="model.description">
+      <input class="w3-input w3-border" type="text" maxlength="256" data-ng-model="model.description">
       <label class="w3-label w3-validate">Your Description</label>
       </p>
     </div>
     <div class="w3-half">
       <p>
-      <input class="w3-input w3-border" type="email" maxlength="256" ng-model="model.mail" required>
+      <input class="w3-input w3-border" type="email" maxlength="256" data-ng-model="model.mail" required>
       <label class="w3-label w3-validate">Mail</label>
       </p>
     </div>
@@ -44,18 +44,18 @@
   </div>
   </form>
 
-  <form class="w3-section" ng-submit="password_first && password_first == password_second && doSavePassword()">
+  <form class="w3-section" data-ng-submit="password_first && password_first == password_second && doSavePassword()">
   <h5>Change Password</h5>
   
   <div class="w3-row-padding">
     <div class="w3-half">
       <p>
-      <input class="w3-input w3-border" type="password" maxlength="256" ng-model="password_first">
+      <input class="w3-input w3-border" type="password" maxlength="256" data-ng-model="password_first">
       <label class="w3-label w3-validate">Password</label>
       </p>
 
       <p>
-      <input class="w3-input w3-border" type="password" maxlength="256" ng-model="password_second">
+      <input class="w3-input w3-border" type="password" maxlength="256" data-ng-model="password_second">
       <label class="w3-label w3-validate">Repeat Password</label>
       </p>
     </div>
@@ -66,7 +66,7 @@
   <div class="w3-row-padding">
     <div class="w3-half">
       <p>
-      <button class="w3-btn w3-blue w3-hover-none w3-hover-red" ng-class="{'w3-disabled': password_first !== password_second}">Save Password</button>
+      <button class="w3-btn w3-blue w3-hover-none w3-hover-red" data-ng-class="{'w3-disabled': password_first !== password_second}">Save Password</button>
       <span class="w3-text-red w3-padding-small">{{status_message_pass}}</span>
       </p>
     </div>
@@ -83,7 +83,7 @@
       <h6>gnumpf.tk auth</h6>
     </div>
     <div class="w3-half w3-right-align">
-      <h6><a href="" ng-click="doLogout()">Logout</a></h6>
+      <h6><a href="" data-ng-click="doLogout()">Logout</a></h6>
     </div>
   </div>
 </footer>

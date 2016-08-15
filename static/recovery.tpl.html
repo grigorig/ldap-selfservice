@@ -1,22 +1,22 @@
-<div ng-class="{'w3-disabled': busy}" ng-controller="RecoverCtrl">
-<div class="w3-container w3-margin-top">
+<div data-ng-controller="RecoverCtrl">
+<div class="w3-container w3-margin-top" data-ng-class="{'w3-disabled': busy}">
 
 <p>Please enter your username and mail to request a password reset ticket.</p>
 
 <div class="w3-content w3-margin-bottom" style="max-width: 20em;">
 <form class="w3-container">
   <p>
-  <input class="w3-input w3-border" type="text" maxlength="256" ng-model="username" autofocus>
+  <input class="w3-input w3-border" type="text" maxlength="256" data-ng-model="username" autofocus>
   <label class="w3-label w3-validate">Username</label>
   </p>
 
   <p>
-  <input class="w3-input w3-border" type="text" maxlength="256" ng-model="mail">
+  <input class="w3-input w3-border" type="text" maxlength="256" data-ng-model="mail">
   <label class="w3-label w3-validate">Mail</label>
   </p>
 
   <p>
-  <button class="w3-btn w3-blue w3-hover-none w3-hover-red" ng-class="{'w3-disabled': !username || !mail}" ng-click="doReset()">Reset Password</button>
+  <button class="w3-btn w3-blue w3-hover-none w3-hover-red" data-ng-class="{'w3-disabled': !username || !mail}" data-ng-click="doReset()">Reset Password</button>
   </p>
 </form>
 </div>

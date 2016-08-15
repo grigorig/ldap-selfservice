@@ -224,12 +224,15 @@ class Tickets:
         msg["From"] = config["recover.mail_from"]
         msg["To"] = mail_to
         
-        print(msg)
-        
-        # use sendmail to send it out
-        #p = subprocess.Popen(["sendmail", "-f", config["recover.mail_from"],
-        #                      "-t", "-oi"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-        #p.communicate(msg.as_string())
+
+        if config.get("recover.debug") == True:
+            print(msg)
+        else:
+            # use sendmail to send it out
+            sendmail_path = config["recover.sendmail_path"]
+            p = subprocess.Popen([sendmail_path, "-f", config["recover.mail_from"],
+                                "-t", "-oi"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+            p.communicate(str(msg).encode("ASCII"))
 
     @cherrypy.expose()
     @cherrypy.tools.no_index()
@@ -263,8 +266,7 @@ class Tickets:
             ticketstr = ''.join([ "%02x"%x for x in bytes(os.urandom(16)) ])
             self.tickets[ticketstr] = (req.get("username"), time.time())
             
-            # TODO: send ticket mail
-            print("new ticket: " + ticketstr)
+            # finally send mail
             self.send_ticket_mail(ticketstr, req.get("username"), req.get("mail"))
             
             return True

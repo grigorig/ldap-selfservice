@@ -196,16 +196,13 @@ class Users:
 
         config = cherrypy.request.config
         req = cherrypy.request.json
+        conn = cherrypy.request.ldap_connection
         
         # do some basic validation
         try:
             Helpers.validate_string(req.get("password"), min_length=6, type_single_line=True, type_safe_ascii=True)
         except ValueError as v:
             raise JSONHTTPError(400, str(v))
-
-        conn = Helpers.get_admin_ldap_connection(config)
-        if not conn:
-            raise JSONHTTPError(500, "Failed to connect to directory service")
         
         try:
             conn.extend.standard.modify_password(config["ldap.bind_template"] %ldap3.utils.conv.escape_bytes(userid), None, req.get("password"))

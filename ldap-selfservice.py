@@ -75,14 +75,14 @@ class Helpers:
                     config["ldap.search_filter"] %ldap3.utils.conv.escape_bytes(userid),
                     attributes=attribs)
         except ldap3.LDAPException as ex:
-            raise cherrypy.HTTPError(500, "unable to get user profile")
+            raise cherrypy.HTTPError("500 Unable to get user profile")
         
         if len(conn.entries) == 0:
-            raise cherrypy.HTTPError(400, "cannot find user")
+            raise cherrypy.HTTPError("400 Cannot find user")
             
         for a in mandatory_attribs:
             if not a in conn.entries[0]:
-                raise cherrypy.HTTPError(500, "invalid user profile")
+                raise cherrypy.HTTPError("500 Invalid user profile")
 
         entry = conn.entries[0].entry_get_attributes_dict()
         
@@ -104,7 +104,7 @@ class Users:
         """Get or update profile"""
         
         if userid != cherrypy.request.login:
-            raise cherrypy.HTTPError(401, "requested user does not match authentification")
+            raise cherrypy.HTTPError("401 Request does not match authentification")
 
         config = cherrypy.request.config
         conn = cherrypy.request.ldap_connection
@@ -133,7 +133,7 @@ class Users:
                 Helpers.validate_string(req.get("mail"), type_mail=True, type_single_line=True)
                 Helpers.validate_string(req.get("description"), type_single_line=True, min_length=0)
             except ValueError as v:
-                raise cherrypy.HTTPError(400, str(v))
+                raise cherrypy.HTTPError("400 Invalid parameters", str(v))
             
             # we need the current profile to update the mail
             entry = Helpers.get_profile(config, conn, userid)
@@ -144,7 +144,7 @@ class Users:
 
             conn = Helpers.get_admin_ldap_connection(config)
             if not conn:
-                raise cherrypy.HTTPError(500, "failed to connect to authenticator")
+                raise cherrypy.HTTPError("500 Failed to connect to directory service")
 
             operations = {
                 'displayName': [(ldap3.MODIFY_REPLACE, [req.get("display_name")])],
@@ -160,7 +160,7 @@ class Users:
                 conn.modify(config["ldap.bind_template"] %ldap3.utils.conv.escape_bytes(userid), operations);
             except ldap3.LDAPException as ex:
                 cherrypy.log(str(ex))
-                raise cherrypy.HTTPError(500, "unable to update profile")
+                raise cherrypy.HTTPError("500 Unable to update profile entry")
             
             return True
 
@@ -178,16 +178,16 @@ class Users:
         try:
             Helpers.validate_string(req.get("password"), min_length=6, type_single_line=True, type_safe_ascii=True)
         except ValueError as v:
-            raise cherrypy.HTTPError(400, str(v))
+            raise cherrypy.HTTPError("400 %s" % str(v))
 
         conn = Helpers.get_admin_ldap_connection(config)
         if not conn:
-            raise cherrypy.HTTPError(500, "failed to connect to authenticator")
+            raise cherrypy.HTTPError("500 Failed to connect to directory service")
         
         try:
             conn.extend.standard.modify_password(config["ldap.bind_template"] %ldap3.utils.conv.escape_bytes(userid), None, req.get("password"))
         except ldap3.LDAPException as ex:
-            raise cherrypy.HTTPError(500, "unable to change password")
+            raise cherrypy.HTTPError("500 Unable to change password")
 
         return True
 
@@ -251,15 +251,15 @@ class Tickets:
                 Helpers.validate_string(req.get("username"), type_safe_ascii=True)
                 Helpers.validate_string(req.get("mail"), type_mail=True, type_single_line=True)
             except ValueError as v:
-                raise cherrypy.HTTPError(400, str(v))
+                raise cherrypy.HTTPError("400 Invalid parameters", str(v))
 
             conn = Helpers.get_admin_ldap_connection(config)
             if not conn:
-                raise cherrypy.HTTPError(500, "failed to connect to authenticator")
+                raise cherrypy.HTTPError("500 Failed to connect to directory service")
             
             entry = Helpers.get_profile(config, conn, req.get("username"))
             if not req.get("mail") in entry["mail"]:
-                cherrypy.HTTPError(400, "user not found")
+                cherrypy.HTTPError("400 User not found")
 
             # ticket generation
             ticketstr = ''.join([ "%02x"%x for x in bytes(os.urandom(16)) ])
@@ -275,7 +275,7 @@ class Tickets:
             try:
                 Helpers.validate_string(ticketid, type_safe_ascii=True, min_length=32, max_length=32)
             except ValueError as v:
-                raise cherrypy.HTTPError(400)
+                raise cherrypy.HTTPError("400")
             
             # purge old tickets
             ticket_timeout = int(config["recover.ticket_timeout_mins"]) * 60
@@ -289,14 +289,14 @@ class Tickets:
             # finally, generate new random password
             conn = Helpers.get_admin_ldap_connection(config)
             if not conn:
-                raise cherrypy.HTTPError(500, "failed to connect to authenticator")
+                raise cherrypy.HTTPError("500 Failed to connect to directory service")
             
             new_password = None
             username = ticket[0]
             try:
                 new_password = conn.extend.standard.modify_password(config["ldap.bind_template"] % username, None, None)
             except ldap3.LDAPException as ex:
-                raise cherrypy.HTTPError(500)
+                raise cherrypy.HTTPError("500 Unable to generate new password")
                 
             # delete ticket
             del self.tickets[ticketid]

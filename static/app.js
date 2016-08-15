@@ -39,36 +39,31 @@ angular.module('LoginApp', ['ngRoute'])
         
         if ($routeParams["ticket"] != undefined) {
             $scope.busy = true;
-            $scope.pm.redeemReset($routeParams["ticket"]).then(function(params) {
-                if (params == null) {
-                    $scope.$emit("showModal", "Ticket Reedem Failed", "Failed to redeem a password reset ticket. The ticket may have timed out. Please request a new ticket and try again.");
+            $scope.pm.redeemReset($routeParams["ticket"]).then(function success(params) {
+                $scope.pm.login(params.username, params.password).then(function success() {
+                    $location.path("/profile");
+                }, function error(status) {
+                    $scope.$emit("showModal", "Ticket Reedem Failed", "Failed to login after redeeming password reset ticket. This should not happen. Please request a new ticket and try again.", "Reason: " + status);
                     $location.search({})
                     $scope.busy = false;
-                    return;
-                }
-                $scope.pm.login(params.username, params.password).then(function(status) {
-                    if (status == true) {
-                        $location.path("/profile");
-                    } else {
-                        $scope.$emit("showModal", "Ticket Reedem Failed", "Failed to login after redeeming password reset ticket. This should not happen. Please request a new ticket and try again.");
-                        $location.search({})
-                        $scope.busy = false;
-                    }
                 });
+
+            }, function error(status) {
+                $scope.$emit("showModal", "Ticket Reedem Failed", "Failed to redeem a password reset ticket. The ticket may have timed out. Please request a new ticket and try again.");
+                $location.search({})
+                $scope.busy = false;
             });
         }
 
         $scope.doLogin = function() {
             $scope.busy = true;
             $scope.status_message = "";
-            $scope.pm.login($scope.username, $scope.password).then(function(status) {
-                if (status == true) {
+            $scope.pm.login($scope.username, $scope.password).then(function success() {
                     $location.url("/profile");
-                } else {
-                    setStatus("Login failed.");
-                    $scope.busy = false;
-                    document.getElementById("login-username").focus();
-                }
+            }, function error(status) {
+                setStatus("Login failed.");
+                $scope.busy = false;
+                document.getElementById("login-username").focus();
             });
         };
     })
@@ -85,14 +80,12 @@ angular.module('LoginApp', ['ngRoute'])
         }
 
         var loadProfile = function() {
-            $scope.pm.get_profile().then(function(profile_data) {
-                if (profile_data == null) {
-                    $scope.$emit("showModal", "Error", "Failed to load profile. Please log out and try again.");
-                    return;
-                }
+            $scope.pm.get_profile().then(function success(profile_data) {
                 $scope.model = profile_data;
                 $scope.model.username = $scope.pm.getUsername();
                 $scope.busy = false;
+            }, function error(status) {
+                $scope.$emit("showModal", "Error", "Failed to load profile. Please log out and try again.", "Reason: " + status);
             });
         };
         
@@ -120,31 +113,27 @@ angular.module('LoginApp', ['ngRoute'])
                 mail: $scope.model.mail,
                 description: $scope.model.description
             }; 
-            $scope.pm.set_profile(profile_data).then(function(status) {
-                if (status == true) {
-                    $scope.status_message_profile = "Saved.";
-                    $timeout(function() { $scope.status_message_profile = ""; }, 5000);
-                    loadProfile();
-                    $scope.busy = false;
-                } else {
-                    $scope.busy = false;
-                    $scope.$emit("showModal", "Error", "Failed to save profile. Please try again.");
-                }
+            $scope.pm.set_profile(profile_data).then(function success() {
+                $scope.status_message_profile = "Saved.";
+                $timeout(function() { $scope.status_message_profile = ""; }, 5000);
+                loadProfile();
+                $scope.busy = false;
+            }, function error(status) {
+                $scope.busy = false;
+                $scope.$emit("showModal", "Error", "Failed to save profile. Please try again.", "Reason: " + status);
             });
 
         };
 
         $scope.doSavePassword = function() {
             $scope.busy = true;
-            $scope.pm.set_password($scope.password_first).then(function(status) {
-                if (status == true) {
-                    $scope.status_message_pass = "Saved.";
-                    $timeout(function() { $scope.status_message_pass = ""; }, 5000);
-                    $scope.busy = false;
-                } else {
-                    $scope.busy = false;
-                    $scope.$emit("showModal", "Error", "Failed to save password. Please try again.");
-                }
+            $scope.pm.set_password($scope.password_first).then(function success() {
+                $scope.status_message_pass = "Saved.";
+                $timeout(function() { $scope.status_message_pass = ""; }, 5000);
+                $scope.busy = false;
+            }, function error(status) {
+                $scope.busy = false;
+                $scope.$emit("showModal", "Error", "Failed to save password. Please try again.", "Reason: " + status);
             });
         };
 
@@ -162,10 +151,10 @@ angular.module('LoginApp', ['ngRoute'])
         $scope.$emit("titleChanged", "Password Reset");
         $scope.doReset = function() {
             $scope.busy = true;
-            $scope.pm.requestReset($scope.username, $scope.mail).then(function success(response) {
+            $scope.pm.requestReset($scope.username, $scope.mail).then(function success() {
                 $scope.$emit("showModal", "Request Successful", "Your password reset request was successful. A reset ticket was sent to you. Please check your mail for further instructions.");
                 $scope.busy = false;
-            }, function error(response) {
+            }, function error(status) {
                 $scope.$emit("showModal", "Request Failed", "Your password reset request failed. Please verify mail and username and try again.");
                 $scope.busy = false;
             });
@@ -174,7 +163,7 @@ angular.module('LoginApp', ['ngRoute'])
 
     // ProfileManager factory object
     // This stores credentials between different pages
-    .factory('ProfileManager', function($log, $http) {
+    .factory('ProfileManager', function($log, $http, $q) {
         var username = null;
         var auth_header = null;
         var authenticated = false;
@@ -192,10 +181,10 @@ angular.module('LoginApp', ['ngRoute'])
                     username = _username;
                     auth_header = auth;
                     authenticated = true;
-                    return true;  
+                    return;
                 }, function error(response) {
-                    $log.debug("login failed");
-                    return false;
+                    $log.debug("login failed: " + response.statusText);
+                    return $q.reject(response.statusText);
                 });
             },
             get_profile: function() {
@@ -210,7 +199,7 @@ angular.module('LoginApp', ['ngRoute'])
                 return $http(httpConfig).then(function success(response) {
                     return response.data;
                 }, function error(response) {
-                    return null;
+                    return $q.reject(response.statusText);
                 });
             },
             set_profile: function(profile_data) {
@@ -225,9 +214,9 @@ angular.module('LoginApp', ['ngRoute'])
                     data: profile_data
                 };
                 return $http(httpConfig).then(function success(response) {
-                    return true;
+                    return;
                 }, function error(response) {
-                    return false;
+                    return $q.reject(response.statusText);
                 });
             },
             set_password: function(new_password) {
@@ -243,9 +232,9 @@ angular.module('LoginApp', ['ngRoute'])
                 };
                 return $http(httpConfig).then(function success(response) {
                     that.login(username, new_password);
-                    return true;
+                    return;
                 }, function error(response) {
-                    return false;
+                    return $q.reject(response.statusText);
                 });
             },
             getUsername: function() {
@@ -268,7 +257,11 @@ angular.module('LoginApp', ['ngRoute'])
                     data: { username: req_username,
                             mail: req_mail }
                 };
-                return $http(httpConfig);
+                return $http(httpConfig).then(function(response) {
+                    return;
+                }, function(response) {
+                    return $q.reject(response.statusText);
+                });
             },
             redeemReset: function(ticketid) {
                 var httpConfig = {
@@ -278,7 +271,7 @@ angular.module('LoginApp', ['ngRoute'])
                 return $http(httpConfig).then(function success(response) {
                     return response.data;
                 }, function error(response) {
-                    return null;
+                    return $q.reject(response.statusText);
                 });
             },
         };

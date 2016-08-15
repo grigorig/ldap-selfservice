@@ -258,8 +258,8 @@ class Tickets:
                 raise cherrypy.HTTPError("500 Failed to connect to directory service")
             
             entry = Helpers.get_profile(config, conn, req.get("username"))
-            if not req.get("mail") in entry["mail"]:
-                cherrypy.HTTPError("400 User not found")
+            if not (req.get("mail") in entry["mail"]):
+                raise cherrypy.HTTPError("400 User not found")
 
             # ticket generation
             ticketstr = ''.join([ "%02x"%x for x in bytes(os.urandom(16)) ])
@@ -304,7 +304,7 @@ class Tickets:
             return { "username": username, "password": new_password }
 
         else:
-            cherrypy.HTTPError(400);
+            raise cherrypy.HTTPError(400);
 
 
 class Api:

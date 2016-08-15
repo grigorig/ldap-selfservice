@@ -1,0 +1,13 @@
+[Unit]
+Description=ldap-selfservice Web Server
+After=network.target
+
+[Service]
+ExecStart=/opt/ldapss/virtenv/bin/python /opt/ldapss/ldap-selfservice.py
+WorkingDirectory=/opt/ldapss
+User=nobody
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+

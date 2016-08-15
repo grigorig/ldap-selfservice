@@ -1,12 +1,12 @@
 <div class="w3-content w3-section" style="max-width: 20em;" data-ng-controller="LoginCtrl" data-ng-class="{'w3-disabled': busy}">
 <form class="w3-container">
   <p>
-  <input class="w3-input w3-border" type="text" maxlength="256" autofocus data-ng-model="username" id="login-username">
+  <input class="w3-input w3-border" type="text" maxlength="256" autofocus data-ng-model="username" id="login-username" required>
   <label class="w3-label">Username</label>
   </p>
   
   <p>
-  <input class="w3-input w3-border" type="password" maxlength="256" data-ng-model="password">
+  <input class="w3-input w3-border" type="password" maxlength="256" data-ng-model="password" required>
   <label class="w3-label">Password</label>
   </p>
   

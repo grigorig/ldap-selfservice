@@ -7,6 +7,7 @@ import time
 from string import Template
 from email.mime.text import MIMEText
 import subprocess
+import argparse
 
 
 def no_index():
@@ -328,6 +329,10 @@ class Root:
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="ldap-selfservice")
+    parser.add_argument("--debug", "-d", action="store_true", help="debug mode")
+    args = parser.parse_args()
+
     root = Root()
 
     global_config = {
@@ -350,6 +355,8 @@ if __name__ == "__main__":
         },
     }
     
-    #cherrypy.config.update(cherrypy.config.environments["production"])
+    if args.debug == False:
+        cherrypy.config.update(cherrypy.config.environments["production"])
+
     cherrypy.config.update("global.conf")
     cherrypy.quickstart(root, '/', app_config)

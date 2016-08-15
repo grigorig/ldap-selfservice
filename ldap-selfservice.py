@@ -126,8 +126,6 @@ class Users:
         elif cherrypy.request.method == "POST":
             req = cherrypy.request.json
             
-            print(req)
-            
             # do some basic validation
             try:
                 Helpers.validate_string(req.get("display_name"))
@@ -278,7 +276,6 @@ class Tickets:
             except ValueError as v:
                 raise cherrypy.HTTPError(400)
             
-            print(self.tickets)
             # purge old tickets
             ticket_timeout = int(config["recover.ticket_timeout_mins"]) * 60
             self.tickets = dict(filter(lambda k: (time.time() - k[1][1]) < ticket_timeout, self.tickets.items()))

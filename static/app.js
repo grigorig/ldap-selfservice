@@ -10,7 +10,7 @@ angular.module('LoginApp', ['ngRoute'])
     })
     
     // MasterCtrl handles changes to the overall page layout and modals
-    .controller('MasterCtrl', function($scope, ProfileManager) {
+    .controller('MasterCtrl', function($scope, $timeout, ProfileManager) {
         $scope.pm = ProfileManager;
         $scope.show_modal = false;
         $scope.$on("titleChanged", function(event, new_title) {
@@ -22,6 +22,9 @@ angular.module('LoginApp', ['ngRoute'])
             $scope.modal_err_msg = err;
             $scope.modal_post_msg = post;
             $scope.show_modal = true;
+            $timeout(function() {
+                document.getElementById("close-button").focus();
+            }, 100);
         });
     })
   

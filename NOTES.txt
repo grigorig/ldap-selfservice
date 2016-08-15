@@ -6,3 +6,18 @@ Web API
 /api/users/<userid>/password - set password (POST)
 /api/tickets/<ticket> - recover (POST)
 /api/tickets/ - request (POST)
+
+TODO
+====
+
+Short-term
+- Sensible non-JS fallback, at least show a modal warning notice or something like that
+- Autofocus button in modals
+- Better error reporting from API responses
+- Make it run as a systemd unit
+- Autologout?
+- Check form validation
+
+Long-term
+- Add jpegPhoto upload
+- Show group/role memberships

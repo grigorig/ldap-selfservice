@@ -170,6 +170,13 @@ angular.module('LoginApp', ['ngRoute'])
         var username = null;
         var auth_header = null;
         var authenticated = false;
+
+        var get_error_msg = function(response) {
+            if (response.data != null && response.data.message != null)
+                return response.data.message
+            else
+                return "HTTP error"
+        }
         
         var that = {
             login: function(_username, password) {
@@ -186,8 +193,8 @@ angular.module('LoginApp', ['ngRoute'])
                     authenticated = true;
                     return;
                 }, function error(response) {
-                    $log.debug("login failed: " + response.statusText);
-                    return $q.reject(response.statusText);
+                    $log.debug("login failed: " + get_error_msg(response));
+                    return $q.reject(get_error_msg(response));
                 });
             },
             get_profile: function() {
@@ -202,7 +209,7 @@ angular.module('LoginApp', ['ngRoute'])
                 return $http(httpConfig).then(function success(response) {
                     return response.data;
                 }, function error(response) {
-                    return $q.reject(response.statusText);
+                    return $q.reject(get_error_msg(response));
                 });
             },
             set_profile: function(profile_data) {
@@ -219,7 +226,7 @@ angular.module('LoginApp', ['ngRoute'])
                 return $http(httpConfig).then(function success(response) {
                     return;
                 }, function error(response) {
-                    return $q.reject(response.statusText);
+                    return $q.reject(get_error_msg(response));
                 });
             },
             set_password: function(new_password) {
@@ -237,7 +244,7 @@ angular.module('LoginApp', ['ngRoute'])
                     that.login(username, new_password);
                     return;
                 }, function error(response) {
-                    return $q.reject(response.statusText);
+                    return $q.reject(get_error_msg(response));
                 });
             },
             getUsername: function() {
@@ -263,7 +270,7 @@ angular.module('LoginApp', ['ngRoute'])
                 return $http(httpConfig).then(function(response) {
                     return;
                 }, function(response) {
-                    return $q.reject(response.statusText);
+                    return $q.reject(get_error_msg(response));
                 });
             },
             redeemReset: function(ticketid) {
@@ -274,7 +281,7 @@ angular.module('LoginApp', ['ngRoute'])
                 return $http(httpConfig).then(function success(response) {
                     return response.data;
                 }, function error(response) {
-                    return $q.reject(response.statusText);
+                    return $q.reject(get_error_msg(response));
                 });
             },
         };

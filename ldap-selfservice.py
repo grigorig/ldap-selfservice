@@ -207,7 +207,7 @@ class Users:
         try:
             conn.extend.standard.modify_password(config["ldap.bind_template"] %ldap3.utils.conv.escape_bytes(userid), None, req.get("password"))
         except ldap3.LDAPException as ex:
-            raise JSONHTTPError(500, "Unable to change password")
+            raise JSONHTTPError(500, "Unable to change password (%s)" %str(ex))
 
         return True
 
